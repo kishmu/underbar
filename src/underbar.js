@@ -161,6 +161,27 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    var start = null;
+    if(accumulator === undefined) {
+      if (Array.isArray(collection)) {
+        accumulator = collection[0];
+        start = 0;
+      }
+      else {
+        for (var key in collection) {
+          accumulator = collection[key];
+          start = key;
+          break;
+        }
+      } 
+    }
+
+    _.each(collection, function(item, key, coll) {
+      if (key !== start) {
+        accumulator = iterator(accumulator, item, coll);
+      }
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -179,12 +200,43 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (iterator === undefined) 
+      iterator = _.identity;
+    
+    return _.reduce(collection, function truthTest(isTrue, item) {
+      if (!isTrue)
+        return false;
+      var res = iterator(item);
+      // test for falsy values
+      return res != 0 && res != '' && res != undefined && res != false && res != null;
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    // empty collection
+    if (Array.isArray(collection)) {
+      if(collection.length == 0)
+        return false;
+    }
+    else {
+      if(collection == {})
+        return false;
+    }
+
+    if (_.every(collection, iterator))
+      return true;
+
+    if (iterator === undefined) 
+      iterator = _.identity;
+
+    var not_all = _.every(collection, function notTruthTest(item) {
+      return !iterator(item);
+    });
+
+    return !not_all;
   };
 
 
