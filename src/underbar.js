@@ -327,6 +327,16 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    // get the arguments list to func and make a key out of it and store it in an object, 
+    // with correspoinding _.once function as value. Call that once function
+    var onceFuncMap = { /*key_arg_list: once version of func*/};
+    return function() {
+      var key = (Array.prototype.slice.call(arguments)).join("-");
+      if (!(key in onceFuncMap)) {
+        onceFuncMap[key] = (_.once(func)).apply(this, arguments);
+        return onceFuncMap[key];
+      }
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
