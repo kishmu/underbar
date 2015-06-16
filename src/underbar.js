@@ -226,9 +226,6 @@
         return false;
     }
 
-    if (_.every(collection, iterator))
-      return true;
-
     if (iterator === undefined) 
       iterator = _.identity;
 
