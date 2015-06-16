@@ -332,10 +332,9 @@
     var onceFuncMap = { /*key_arg_list: once version of func*/};
     return function() {
       var key = (Array.prototype.slice.call(arguments)).join("-");
-      if (!(key in onceFuncMap)) {
+      if (!(key in onceFuncMap)) 
         onceFuncMap[key] = (_.once(func)).apply(this, arguments);
-        return onceFuncMap[key];
-      }
+      return onceFuncMap[key];
     };
   };
 
