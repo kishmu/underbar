@@ -206,9 +206,7 @@
     return _.reduce(collection, function truthTest(isTrue, item) {
       if (!isTrue)
         return false;
-      var res = iterator(item);
-      // test for falsy values
-      return res != 0 && res != '' && res != undefined && res != false && res != null;
+      return !!iterator(item);
     }, true);
   };
 
@@ -229,11 +227,9 @@
     if (iterator === undefined) 
       iterator = _.identity;
 
-    var not_all = _.every(collection, function notTruthTest(item) {
+    return !_.every(collection, function notTruthTest(item) {
       return !iterator(item);
     });
-
-    return !not_all;
   };
 
 
