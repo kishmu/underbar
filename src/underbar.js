@@ -203,7 +203,7 @@
     if (iterator === undefined) 
       iterator = _.identity;
     
-    return _.reduce(collection, function truthTest(isTrue, item) {
+    return _.reduce(collection, function(isTrue, item) {
       if (!isTrue)
         return false;
       return !!iterator(item);
@@ -214,20 +214,11 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    // empty collection
-    if (Array.isArray(collection)) {
-      if(collection.length == 0)
-        return false;
-    }
-    else {
-      if(collection == {})
-        return false;
-    }
-
+  
     if (iterator === undefined) 
       iterator = _.identity;
 
-    return !_.every(collection, function notTruthTest(item) {
+    return !_.every(collection, function(item) {
       return !iterator(item);
     });
   };
@@ -338,6 +329,8 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+      var args_array = Array.prototype.slice.call(arguments, 2);
+      setTimeout(function() { return func.apply(null, args_array); }, wait);
   };
 
 
@@ -352,6 +345,18 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var result = Array.prototype.slice.call(array);
+    var max = result.length;
+    for (var i = 0; i < max - 1; i++) {
+      var min = i+1;
+      // random integer between min(incl) and max(excl)
+      var random_index = Math.floor(Math.random() * (max - min)) + min;
+      // swap elements at i and random_index
+      var temp = result[i];
+      result[i] = result[random_index];
+      result[random_index] = temp;
+    }
+    return result;
   };
 
 
