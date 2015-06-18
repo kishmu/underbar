@@ -101,12 +101,15 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var res = [];
+    var result = [];
+    var hash = {};
     _.each(array, function(item) {
-        if(_.indexOf(res, item) < 0)
-          res.push(item);
+        if (!(item in hash)) {
+          hash[item] = 0;
+          result.push(item);
+        };
     });
-    return res;
+    return result;
   };
 
 
